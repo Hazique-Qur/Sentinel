@@ -1,0 +1,31 @@
+# Environment files
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Logs
+*.log
+backend_error.log
+output.log
+phase3_output.log
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Antigravity artifacts (if not intended for repo)
+.gemini/
+brain/

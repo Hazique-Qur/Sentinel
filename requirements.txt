@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pymongo
+earthengine-api
+pandas
+scikit-learn
+requests
+python-dotenv
+gunicorn
