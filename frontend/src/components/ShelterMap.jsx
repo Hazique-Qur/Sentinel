@@ -40,6 +40,18 @@ function ChangeView({ center }) {
     return null;
 }
 
+// Auto-focus on nearest shelter when risk is High
+function FlyToNearestShelter({ shelters, risk }) {
+    const map = useMap();
+    React.useEffect(() => {
+        if (risk === 'High' && Array.isArray(shelters) && shelters.length > 0) {
+            const nearest = shelters[0];
+            map.flyTo([nearest.lat, nearest.lon], 14, { duration: 2 });
+        }
+    }, [risk, shelters, map]);
+    return null;
+}
+
 const ShelterMap = ({ shelters, center, risk, score }) => {
     const getRiskColor = () => {
         if (risk === 'High') return '#ef4444';
@@ -51,6 +63,7 @@ const ShelterMap = ({ shelters, center, risk, score }) => {
         <div className="h-[400px] w-full relative z-0">
             <MapContainer center={center} zoom={13} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
                 <ChangeView center={center} />
+                <FlyToNearestShelter shelters={shelters} risk={risk} />
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
                     url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"

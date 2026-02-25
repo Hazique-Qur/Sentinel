@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldAlert, MapPin, Wind, Thermometer, Droplets, Activity, RefreshCw } from 'lucide-react';
+import { ShieldAlert, MapPin, Wind, Thermometer, Droplets, Activity, RefreshCw, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import RiskCard from '../components/RiskCard';
 import ActionList from '../components/ActionList';
@@ -38,14 +38,30 @@ const DashboardPage = ({ appState, setAppState, fetchRiskData }) => {
         }
     };
 
+    const lowConfidence = appState.risk?.confidence != null && appState.risk.confidence < 0.6;
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className={`min-h-screen pt-24 pb-12 transition-all duration-1000 ease-in-out ${riskLevel === 'High' ? 'bg-red-950/20' : riskLevel === 'Medium' ? 'bg-yellow-950/20' : 'bg-slate-950'
-                } ${riskLevel === 'High' ? 'alert-high' : riskLevel === 'Medium' ? 'alert-medium' : ''}`}
+                } ${riskLevel === 'High' ? 'alert-high' : riskLevel === 'Medium' ? 'alert-medium' : ''} relative`}
         >
+            {/* Low Confidence Data Integrity Warning Overlay */}
+            <AnimatePresence>
+                {lowConfidence && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="fixed top-20 left-1/2 -translate-x-1/2 z-[200] flex items-center gap-3 bg-amber-500/10 border border-amber-500/30 backdrop-blur-md px-5 py-2.5 rounded-2xl shadow-xl"
+                    >
+                        <AlertTriangle size={14} className="text-amber-400 animate-pulse" />
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400">Data Integrity Gap — AI Confidence Below 60% — Results May Be Approximate</span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Step 4: Drop Banner State */}
             <AnimatePresence>
