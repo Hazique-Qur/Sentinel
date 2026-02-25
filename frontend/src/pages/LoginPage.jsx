@@ -11,9 +11,14 @@ const LoginPage = () => {
     const location = useLocation();
     const from = location.state?.from?.pathname || '/dashboard';
 
-    const handleSuccess = (response) => {
-        login(response.credential);
-        navigate(from, { replace: true });
+    const handleSuccess = async (response) => {
+        try {
+            await login(response.credential);
+            navigate(from, { replace: true });
+        } catch (err) {
+            // Error is handled in AuthContext or displayed in UI
+            console.error('Login flow failed');
+        }
     };
 
     const features = [

@@ -1,6 +1,6 @@
 import os
 import logging
-from fastapi import FastAPI, Query, HTTPException
+from fastapi import FastAPI, Query, HTTPException, APIRouter, Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from config.config import Config
@@ -9,6 +9,7 @@ from src.ingestion.satellite_service import SatelliteService
 from src.processing.feature_engineer import FeatureEngineer
 from src.models.risk_aggregator import RiskAggregator
 from src.utils.shelter_service import ShelterService
+from src.utils.auth_utils import verify_google_token
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -19,6 +20,9 @@ logger = logging.getLogger("SentinelAPI")
 
 app = FastAPI(title="Sentinel Early Warning API")
 
+# Router setup
+api_router = APIRouter(prefix="/api")
+
 # Step 2: Add CORS (Production Requirement)
 app.add_middleware(
     CORSMiddleware,
@@ -28,7 +32,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/risk-response")
+@api_router.post("/auth/verify")
+async def verify_auth(payload: dict = Body(...)):
+    """
+    Verifies Google OAuth token and returns user info.
+    """
+    token = payload.get("credential")
+    if not token:
+        raise HTTPException(status_code=400, detail="Missing credential")
+    
+    user_info = verify_google_token(token)
+    if not user_info:
+        raise HTTPException(status_code=401, detail="Invalid Google token")
+    
+    # In a real app, you might sync with DB here
+    # For now, we return user info with default plan
+    user_info["plan"] = "free"
+    return {"status": "success", "user": user_info}
+
+@api_router.get("/risk-response")
 async def get_risk_response(
     lat: float = Query(Config.DEFAULT_LAT), 
     lon: float = Query(Config.DEFAULT_LON)
@@ -91,7 +113,10 @@ async def get_risk_response(
         logger.error(f"Critical Backend Failure: {str(e)}")
         return JSONResponse(status_code=500, content={"status": "error", "message": "Internal Intelligence Engine Failure"})
 
+# Register router
+app.include_router(api_router)
+
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run("src.api.main:app", host="0.0.0.0", port=port, reload=True)

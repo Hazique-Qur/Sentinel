@@ -18,20 +18,27 @@ export const AuthProvider = ({ children }) => {
         }
     }, []);
 
-    const login = (credential) => {
+    const login = async (credential) => {
         try {
-            const decoded = jwtDecode(credential);
-            const profile = {
-                name: decoded.name,
-                email: decoded.email,
-                picture: decoded.picture,
-                sub: decoded.sub,
-                plan: 'free', // default plan
-            };
+            const baseUrl = import.meta.env.VITE_API_URL || '';
+            const response = await fetch(`${baseUrl}/api/auth/verify`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ credential })
+            });
+
+            if (!response.ok) throw new Error('Backend authentication failed');
+
+            const data = await response.json();
+            const profile = data.user;
+
             setUser(profile);
             localStorage.setItem('sentinel_user', JSON.stringify(profile));
         } catch (err) {
-            console.error('Auth decode failed:', err);
+            console.error('Auth verification failed:', err);
+            // Fallback for demo if backend is offline/unreachable during testing
+            // But we want it to work with the backend now.
+            throw err;
         }
     };
 
