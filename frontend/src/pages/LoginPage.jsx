@@ -1,9 +1,4 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { GoogleLogin } from '@react-oauth/google';
-import { ShieldAlert, Zap, Globe, Lock } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate, useLocation } from 'react-router-dom';
+import Logo from '../components/Logo';
 
 const LoginPage = () => {
     const { login } = useAuth();
@@ -39,15 +34,10 @@ const LoginPage = () => {
                     initial={{ opacity: 0, y: -30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="text-center mb-10"
+                    className="text-center mb-10 flex flex-col items-center"
                 >
-                    <div className="inline-flex items-center gap-3 mb-6">
-                        <div className="p-3 bg-blue-600/20 rounded-2xl border border-blue-500/30">
-                            <ShieldAlert size={32} className="text-blue-400" />
-                        </div>
-                        <span className="text-3xl font-black font-['Outfit'] tracking-tighter">Sentinel</span>
-                    </div>
-                    <p className="text-slate-400 text-sm leading-relaxed font-['Inter']">
+                    <Logo size={48} className="mb-6 scale-125" />
+                    <p className="text-slate-400 text-sm leading-relaxed font-['Inter'] max-w-[280px]">
                         The autonomous early-warning system protecting communities with AI intelligence.
                     </p>
                 </motion.div>

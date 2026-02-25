@@ -1,10 +1,4 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import {
-    Database, Cpu, ShieldCheck, Zap, Droplets,
-    Thermometer, Wind, Code, Layers, Globe,
-    Box, Terminal, Activity, Server
-} from 'lucide-react';
+import Logo from '../components/Logo';
 
 const PipelineBar = ({ label, progress, color, delay = '0s' }) => (
     <div className="space-y-1.5">
@@ -59,9 +53,8 @@ const AboutPage = () => {
                     transition={{ duration: 0.8 }}
                     className="mb-32 text-center"
                 >
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-600/10 border border-blue-500/20 mb-8">
-                        <Activity size={14} className="text-blue-400" />
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-blue-400">Technical Brief v1.2</span>
+                    <div className="mb-12 flex justify-center">
+                        <Logo size={80} />
                     </div>
                     <h2 className="text-5xl md:text-7xl font-['Outfit'] font-black mb-8 tracking-tighter">Engineered for Reliability</h2>
                     <p className="text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-['Inter'] font-medium">

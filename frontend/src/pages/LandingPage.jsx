@@ -1,7 +1,4 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { ShieldAlert, ArrowRight, Activity, Map, Globe, ShieldCheck } from 'lucide-react';
+import Logo from '../components/Logo';
 
 const FeatureCard = ({ icon, title, description, index }) => (
     <motion.div
@@ -43,14 +40,12 @@ const LandingPage = () => {
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                        className="bg-blue-600 inline-flex p-4 rounded-[2rem] shadow-[0_0_50px_rgba(37,99,235,0.3)] mb-10 group hover:rotate-6 transition-transform cursor-pointer"
+                        className="mb-14 flex justify-center"
                     >
-                        <ShieldAlert size={40} className="text-white" />
+                        <Logo size={120} />
                     </motion.div>
 
-                    <h1 className="text-7xl md:text-[9rem] font-['Outfit'] font-black tracking-tighter mb-8 bg-gradient-to-b from-white via-white to-slate-500 bg-clip-text text-transparent leading-[0.9]">
-                        Sentinel
-                    </h1>
+                    <h1 className="sr-only">Sentinel</h1>
 
                     <p className="text-xl md:text-[1.75rem] text-slate-400 max-w-3xl mx-auto mb-14 leading-relaxed font-['Inter'] font-medium">
                         The world's first <span className="text-blue-400 font-black border-b-2 border-blue-400/30 pb-1">Autonomous Decision Support System</span> powered by real-time satellite intelligence.

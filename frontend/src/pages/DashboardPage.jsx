@@ -1,11 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { ShieldAlert, MapPin, Wind, Thermometer, Droplets, Activity, RefreshCw, AlertTriangle } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import RiskCard from '../components/RiskCard';
-import ActionList from '../components/ActionList';
-import ShelterMap from '../components/ShelterMap';
-import AlertBanner from '../components/AlertBanner';
-import ConfidenceMeter from '../components/ConfidenceMeter';
+import Logo from '../components/Logo';
 
 const TelemetryCard = ({ icon, label, value }) => (
     <div className="flex flex-col gap-1 bg-white/5 p-3 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
@@ -70,9 +63,10 @@ const DashboardPage = ({ appState, setAppState, fetchRiskData }) => {
 
             <header className="px-6 flex justify-between items-center max-w-7xl mx-auto relative z-10 mb-8">
                 <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2 bg-blue-600/10 border border-blue-500/30 px-4 py-2 rounded-2xl">
-                        <Activity className="text-blue-400" size={18} />
-                        <span className="text-xs font-bold uppercase tracking-wider text-blue-400">Tactical Dashboard</span>
+                    <Logo size={24} hideText />
+                    <div className="flex items-center gap-2 bg-blue-600/10 border border-blue-500/30 px-3 py-1.5 rounded-xl">
+                        <Activity className="text-blue-400" size={14} />
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-blue-400">Tactical Dashboard</span>
                     </div>
                 </div>
 
@@ -160,9 +154,9 @@ const DashboardPage = ({ appState, setAppState, fetchRiskData }) => {
                         <motion.div
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
-                            className="bg-red-600/90 backdrop-blur-xl p-8 rounded-3xl shadow-2xl text-center max-w-lg border-2 border-white/20 animate-pulse"
+                            className="bg-red-600/90 backdrop-blur-xl p-8 rounded-3xl shadow-2xl text-center max-w-lg border-2 border-white/20 animate-pulse flex flex-col items-center"
                         >
-                            <ShieldAlert size={64} className="mx-auto mb-6" />
+                            <Logo size={64} hideText className="mb-6 text-white" />
                             <h2 className="text-3xl font-['Outfit'] font-bold mb-4 uppercase tracking-tighter">Emergency Protocol Locked</h2>
                             <p className="mb-6 opacity-90 leading-relaxed font-['Inter']">Risk levels exceed safe operational threshold. System has prioritized evacuation routes and shelter navigation. Internal navigation is disabled.</p>
                             <div className="flex gap-4 justify-center">

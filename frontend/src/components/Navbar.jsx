@@ -1,8 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldAlert, LayoutDashboard, Info, Home, Zap, Tag, LogOut, ChevronDown } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import Logo from './Logo';
 
 const Navbar = () => {
     const location = useLocation();
@@ -37,11 +33,8 @@ const Navbar = () => {
             className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-6 py-4 bg-slate-950/80 backdrop-blur-xl border-b border-white/5"
         >
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2.5 group">
-                <div className="p-1.5 bg-blue-600/20 rounded-xl border border-blue-500/30 group-hover:scale-110 transition-transform">
-                    <ShieldAlert size={20} className="text-blue-400" />
-                </div>
-                <span className="font-black text-lg font-['Outfit'] tracking-tighter">Sentinel</span>
+            <Link to="/" className="flex items-center group">
+                <Logo size={32} />
             </Link>
 
             {/* Nav Links */}
