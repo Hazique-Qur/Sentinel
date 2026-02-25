@@ -3,14 +3,21 @@ import { motion } from 'framer-motion';
 
 const Logo = ({ size = 32, className = "", hideText = false }) => {
     return (
-        <div className={`relative flex items-center justify-center ${className}`} style={{ width: hideText ? size : size * 2.5, height: size }}>
+        <div
+            className={`relative flex items-center justify-center ${className}`}
+            style={{
+                width: hideText ? size : size * 3.5,
+                height: size,
+                willChange: 'transform'
+            }}
+        >
             <svg
-                width={hideText ? size : size * 2.5}
+                width={hideText ? size : size * 3.5}
                 height={size}
-                viewBox={hideText ? "5 0 30 40" : "0 0 100 40"}
+                viewBox={hideText ? "5 0 30 40" : "0 0 140 40"}
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                className="drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]"
+                className="filter drop-shadow(0 0 4px rgba(59,130,246,0.3))"
             >
                 {/* Shield Base */}
                 <motion.path
