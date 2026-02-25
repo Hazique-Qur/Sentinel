@@ -25,13 +25,9 @@ const LandingPage = () => {
     return (
         <div className="min-h-screen bg-slate-950 text-slate-50 relative overflow-hidden flex flex-col items-center">
 
-            {/* Animated Hero Background */}
+            {/* Hero Background - Optimized for zero lag */}
             <div className="absolute inset-0 z-0 wave-bg border-b border-white/5 opacity-50">
-                <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-[1px]"></div>
-
-                {/* Floating Particles/Elements - Reduced blurs for performance */}
-                <div className="absolute top-1/4 left-1/4 w-48 h-48 bg-blue-500/10 rounded-full blur-[60px] animate-pulse"></div>
-                <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-[80px] animate-pulse [animation-delay:2s]"></div>
+                <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-[1px]"></div>
             </div>
 
             <main className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col items-center text-center pt-48 pb-32">

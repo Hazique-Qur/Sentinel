@@ -85,7 +85,7 @@ const Logo = ({ size = 32, className = "", hideText = false }) => {
 
                         {/* Underline/Accent */}
                         <motion.path
-                            d="M38 30H80"
+                            d="M38 30H140"
                             stroke="url(#gradient-line)"
                             strokeWidth="2"
                             strokeLinecap="round"
@@ -95,7 +95,7 @@ const Logo = ({ size = 32, className = "", hideText = false }) => {
                         />
 
                         <defs>
-                            <linearGradient id="gradient-line" x1="38" y1="30" x2="80" y2="30" gradientUnits="userSpaceOnUse">
+                            <linearGradient id="gradient-line" x1="38" y1="30" x2="140" y2="30" gradientUnits="userSpaceOnUse">
                                 <stop stopColor="#3B82F6" />
                                 <stop offset="1" stopColor="#3B82F6" stopOpacity="0" />
                             </linearGradient>

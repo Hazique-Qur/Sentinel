@@ -165,9 +165,8 @@
 
 /* Hero Animations */
 .wave-bg {
-  background: linear-gradient(-45deg, #020617, #0f172a, #1e1b4b, #020617);
-  background-size: 200% 200%;
-  animation: gradient-wave 20s ease infinite;
+  background: linear-gradient(-45deg, #020617, #0f172a, #1e1b4b);
+  /* Animation disabled to prevent UI lag */
 }
 
 @keyframes gradient-wave {
