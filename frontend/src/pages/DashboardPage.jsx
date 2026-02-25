@@ -1,3 +1,11 @@
+import React, { useState, useEffect } from 'react';
+import { MapPin, Activity, RefreshCw, AlertTriangle, Thermometer, Droplets, ShieldAlert } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import RiskCard from '../components/RiskCard';
+import ActionList from '../components/ActionList';
+import ShelterMap from '../components/ShelterMap';
+import AlertBanner from '../components/AlertBanner';
+import ConfidenceMeter from '../components/ConfidenceMeter';
 import Logo from '../components/Logo';
 
 const TelemetryCard = ({ icon, label, value }) => (

@@ -1,3 +1,10 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import {
+    Database, ShieldCheck, Zap,
+    Globe, Terminal, Activity, Server,
+    Code, Layers
+} from 'lucide-react';
 import Logo from '../components/Logo';
 
 const PipelineBar = ({ label, progress, color, delay = '0s' }) => (

@@ -1,3 +1,7 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Activity, Globe, ShieldCheck } from 'lucide-react';
 import Logo from '../components/Logo';
 
 const FeatureCard = ({ icon, title, description, index }) => (

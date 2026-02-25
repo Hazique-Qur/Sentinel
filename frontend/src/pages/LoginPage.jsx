@@ -1,3 +1,9 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { GoogleLogin } from '@react-oauth/google';
+import { Zap, Globe, Lock } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Logo from '../components/Logo';
 
 const LoginPage = () => {

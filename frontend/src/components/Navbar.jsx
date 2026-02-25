@@ -1,3 +1,8 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { LayoutDashboard, Info, Home, Zap, Tag, LogOut, ChevronDown } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
 
 const Navbar = () => {
