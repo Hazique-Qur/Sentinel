@@ -4,20 +4,21 @@ import { motion } from 'framer-motion';
 const Logo = ({ size = 32, className = "", hideText = false }) => {
     return (
         <div
-            className={`relative flex items-center justify-center overflow-visible ${className}`}
+            className={`relative flex items-center justify-start overflow-visible ${className}`}
             style={{
-                width: hideText ? size : size * 5,
+                width: hideText ? size : size * 8,
                 height: size,
                 willChange: 'transform'
             }}
         >
             <svg
-                width={hideText ? size : size * 5}
+                width={hideText ? size : size * 8}
                 height={size}
-                viewBox={hideText ? "5 0 30 40" : "0 0 200 40"}
+                viewBox={hideText ? "5 0 30 40" : "0 0 400 40"}
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                className="filter drop-shadow(0 0 4px rgba(59,130,246,0.3)) overflow-visible"
+                className="overflow-visible"
+                style={{ filter: 'drop-shadow(0 0 8px rgba(59,130,246,0.4))' }}
             >
                 {/* Shield Base */}
                 <motion.path
@@ -32,20 +33,18 @@ const Logo = ({ size = 32, className = "", hideText = false }) => {
                     className="text-blue-500"
                 />
 
-                {/* Internal Pulse/Eye */}
+                {/* Internal Pulse/Eye - Simplified for Performance */}
                 <motion.circle
                     cx="20"
                     cy="12"
                     r="4"
-                    initial={{ scale: 0.8, opacity: 0.3 }}
                     animate={{
-                        scale: [0.8, 1.2, 0.8],
-                        opacity: [0.3, 1, 0.3]
+                        opacity: [0.4, 1, 0.4]
                     }}
                     transition={{
                         duration: 3,
                         repeat: Infinity,
-                        ease: "easeInOut"
+                        ease: "linear"
                     }}
                     fill="currentColor"
                     className="text-blue-400"
@@ -73,21 +72,25 @@ const Logo = ({ size = 32, className = "", hideText = false }) => {
                             className="text-blue-500/50"
                         />
 
-                        {/* Text: SENTINEL */}
+                        {/* Text: SENTINEL - Expanded space and fixed tracking */}
                         <text
-                            x="38"
-                            y="25"
-                            className="fill-white font-black tracking-tighter"
-                            style={{ fontSize: '18px', fontFamily: 'Outfit, sans-serif' }}
+                            x="42"
+                            y="26"
+                            className="fill-white font-black"
+                            style={{
+                                fontSize: '20px',
+                                fontFamily: 'Outfit, sans-serif',
+                                letterSpacing: '0.05em'
+                            }}
                         >
                             SENTINEL
                         </text>
 
-                        {/* Underline/Accent */}
+                        {/* Underline/Accent - Extended to full width */}
                         <motion.path
-                            d="M38 30H140"
+                            d="M42 32H150"
                             stroke="url(#gradient-line)"
-                            strokeWidth="2"
+                            strokeWidth="2.5"
                             strokeLinecap="round"
                             initial={{ scaleX: 0 }}
                             animate={{ scaleX: 1 }}
@@ -95,7 +98,7 @@ const Logo = ({ size = 32, className = "", hideText = false }) => {
                         />
 
                         <defs>
-                            <linearGradient id="gradient-line" x1="38" y1="30" x2="140" y2="30" gradientUnits="userSpaceOnUse">
+                            <linearGradient id="gradient-line" x1="42" y1="32" x2="150" y2="32" gradientUnits="userSpaceOnUse">
                                 <stop stopColor="#3B82F6" />
                                 <stop offset="1" stopColor="#3B82F6" stopOpacity="0" />
                             </linearGradient>
