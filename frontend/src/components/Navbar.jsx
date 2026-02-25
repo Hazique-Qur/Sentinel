@@ -1,47 +1,148 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShieldAlert, LayoutDashboard, Info, Home, Zap } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ShieldAlert, LayoutDashboard, Info, Home, Zap, Tag, LogOut, ChevronDown } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
     const location = useLocation();
+    const { user, logout } = useAuth();
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
 
-    const isActive = (path) => location.pathname === path;
+    const navLinks = [
+        { to: '/', label: 'Home', icon: <Home size={16} /> },
+        { to: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard size={16} /> },
+        { to: '/demo', label: 'Simulate', icon: <Zap size={16} /> },
+        { to: '/pricing', label: 'Pricing', icon: <Tag size={16} /> },
+        { to: '/about', label: 'About', icon: <Info size={16} /> },
+    ];
+
+    // Close dropdown on outside click
+    useEffect(() => {
+        const handler = (e) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+                setDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
+    }, []);
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-[100] p-4">
-            <div className="max-w-7xl mx-auto glass px-6 py-3 flex justify-between items-center border-white/5 shadow-2xl backdrop-blur-xl">
-                <Link to="/" className="flex items-center gap-3 group">
-                    <div className="bg-blue-600 p-2 rounded-xl shadow-lg shadow-blue-900/40 group-hover:scale-110 transition-transform">
-                        <ShieldAlert className="text-white" size={20} />
-                    </div>
-                    <div>
-                        <h1 className="text-xl font-['Outfit'] font-bold tracking-tight">Sentinel</h1>
-                        <p className="text-[8px] uppercase tracking-[0.3em] text-blue-500 font-bold">Decision Support</p>
-                    </div>
-                </Link>
-
-                <div className="flex items-center gap-2 md:gap-6">
-                    <NavLink to="/" active={isActive('/')} icon={<Home size={18} />} label="Home" />
-                    <NavLink to="/dashboard" active={isActive('/dashboard')} icon={<LayoutDashboard size={18} />} label="Dashboard" />
-                    <NavLink to="/demo" active={isActive('/demo')} icon={<Zap size={18} />} label="Demo" />
-                    <NavLink to="/about" active={isActive('/about')} icon={<Info size={18} />} label="About" />
+        <motion.nav
+            initial={{ y: -80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-6 py-4 bg-slate-950/80 backdrop-blur-xl border-b border-white/5"
+        >
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2.5 group">
+                <div className="p-1.5 bg-blue-600/20 rounded-xl border border-blue-500/30 group-hover:scale-110 transition-transform">
+                    <ShieldAlert size={20} className="text-blue-400" />
                 </div>
+                <span className="font-black text-lg font-['Outfit'] tracking-tighter">Sentinel</span>
+            </Link>
+
+            {/* Nav Links */}
+            <div className="hidden md:flex items-center gap-1">
+                {navLinks.map((link) => {
+                    const isActive = location.pathname === link.to;
+                    return (
+                        <Link
+                            key={link.to}
+                            to={link.to}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200
+                                ${isActive
+                                    ? 'bg-blue-600/20 text-blue-400 border border-blue-500/20'
+                                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                }`}
+                        >
+                            {link.icon}
+                            {link.label}
+                        </Link>
+                    );
+                })}
             </div>
-        </nav>
+
+            {/* Auth Area */}
+            <div className="flex items-center gap-3">
+                {user ? (
+                    <div className="relative" ref={dropdownRef}>
+                        <button
+                            onClick={() => setDropdownOpen(prev => !prev)}
+                            className="flex items-center gap-2.5 bg-white/5 hover:bg-white/10 border border-white/10 px-3 py-2 rounded-xl transition-all"
+                        >
+                            <img
+                                src={user.picture}
+                                alt={user.name}
+                                className="w-7 h-7 rounded-full border border-white/20"
+                            />
+                            <span className="text-sm font-semibold text-slate-200 hidden sm:block max-w-[100px] truncate">
+                                {user.name?.split(' ')[0]}
+                            </span>
+                            {user.plan === 'pro' && (
+                                <span className="text-[8px] font-bold uppercase tracking-widest text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 rounded-full">
+                                    PRO
+                                </span>
+                            )}
+                            <ChevronDown size={14} className={`text-slate-400 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+                        </button>
+
+                        <AnimatePresence>
+                            {dropdownOpen && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                                    transition={{ duration: 0.15 }}
+                                    className="absolute right-0 mt-2 w-56 glass border-white/10 shadow-2xl rounded-2xl overflow-hidden z-50"
+                                >
+                                    {/* Profile header */}
+                                    <div className="px-4 py-4 border-b border-white/5">
+                                        <p className="text-sm font-bold text-white truncate">{user.name}</p>
+                                        <p className="text-[10px] text-slate-500 truncate">{user.email}</p>
+                                        <span className={`inline-block mt-2 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border
+                                            ${user.plan === 'pro' ? 'text-blue-400 bg-blue-500/10 border-blue-500/20' :
+                                                user.plan === 'enterprise' ? 'text-purple-400 bg-purple-500/10 border-purple-500/20' :
+                                                    'text-slate-400 bg-white/5 border-white/10'}`}>
+                                            {user.plan || 'free'} plan
+                                        </span>
+                                    </div>
+
+                                    {/* Menu items */}
+                                    <div className="p-2">
+                                        <Link
+                                            to="/pricing"
+                                            onClick={() => setDropdownOpen(false)}
+                                            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:bg-white/5 transition-colors"
+                                        >
+                                            <Tag size={15} className="text-blue-400" />
+                                            Upgrade Plan
+                                        </Link>
+                                        <button
+                                            onClick={() => { logout(); setDropdownOpen(false); }}
+                                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:bg-red-500/10 hover:text-red-400 transition-colors"
+                                        >
+                                            <LogOut size={15} />
+                                            Sign Out
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+                ) : (
+                    <Link
+                        to="/login"
+                        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-xl text-sm font-bold transition-all active:scale-95 shadow-lg shadow-blue-900/30"
+                    >
+                        Sign In
+                    </Link>
+                )}
+            </div>
+        </motion.nav>
     );
 };
-
-const NavLink = ({ to, active, icon, label }) => (
-    <Link
-        to={to}
-        className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ${active
-            ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
-            : 'text-slate-400 hover:text-slate-100 hover:bg-white/5 border border-transparent'
-            }`}
-    >
-        {icon}
-        <span className="text-xs font-bold uppercase tracking-wider hidden md:block">{label}</span>
-    </Link>
-);
 
 export default Navbar;
