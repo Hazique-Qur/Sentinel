@@ -14,11 +14,10 @@ const Logo = ({ size = 32, className = "", hideText = false }) => {
             <svg
                 width={hideText ? size : size * 8}
                 height={size}
-                viewBox={hideText ? "5 0 30 40" : "0 0 400 40"}
+                viewBox={hideText ? "5 0 30 40" : "0 0 320 40"}
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 className="overflow-visible"
-                style={{ filter: 'drop-shadow(0 0 8px rgba(59,130,246,0.4))' }}
             >
                 {/* Shield Base */}
                 <motion.path
@@ -86,11 +85,11 @@ const Logo = ({ size = 32, className = "", hideText = false }) => {
                             SENTINEL
                         </text>
 
-                        {/* Underline/Accent - Extended to full width */}
+                        {/* Underline/Accent - Extended to full brand width */}
                         <motion.path
-                            d="M42 32H150"
+                            d="M40 33H160"
                             stroke="url(#gradient-line)"
-                            strokeWidth="2.5"
+                            strokeWidth="3"
                             strokeLinecap="round"
                             initial={{ scaleX: 0 }}
                             animate={{ scaleX: 1 }}
@@ -98,7 +97,7 @@ const Logo = ({ size = 32, className = "", hideText = false }) => {
                         />
 
                         <defs>
-                            <linearGradient id="gradient-line" x1="42" y1="32" x2="150" y2="32" gradientUnits="userSpaceOnUse">
+                            <linearGradient id="gradient-line" x1="40" y1="33" x2="160" y2="33" gradientUnits="userSpaceOnUse">
                                 <stop stopColor="#3B82F6" />
                                 <stop offset="1" stopColor="#3B82F6" stopOpacity="0" />
                             </linearGradient>
