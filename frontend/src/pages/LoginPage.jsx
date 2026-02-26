@@ -7,18 +7,20 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Logo from '../components/Logo';
 
 const LoginPage = () => {
+    const [error, setError] = React.useState(null);
     const { login } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || '/dashboard';
 
     const handleSuccess = async (response) => {
+        setError(null);
         try {
             await login(response.credential);
             navigate(from, { replace: true });
         } catch (err) {
-            // Error is handled in AuthContext or displayed in UI
-            console.error('Login flow failed');
+            console.error('Login flow failed:', err);
+            setError('Authentication failed. Please ensure the backend is reachable.');
         }
     };
 
@@ -78,6 +80,15 @@ const LoginPage = () => {
 
                     {/* Google Login */}
                     <div className="flex flex-col items-center gap-4">
+                        {error && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="w-full p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-xs text-center mb-2"
+                            >
+                                {error}
+                            </motion.div>
+                        )}
                         <div className="w-full flex justify-center">
                             <GoogleLogin
                                 onSuccess={handleSuccess}
