@@ -524,7 +524,7 @@ async def get_alert_history():
 
 @api_router.get("/alerts")
 @limiter.limit("60/minute")
-async def get_alerts():
+async def get_alerts(request: Request):
     """Retrieves all unread notifications across all monitored locations."""
     all_unread = []
     for loc_key in _notifications:
