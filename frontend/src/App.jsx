@@ -12,7 +12,7 @@ import DemoPage from './pages/DemoPage';
 import LoginPage from './pages/LoginPage';
 import PricingPage from './pages/PricingPage';
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '211873885831-hglvk74j8vqplt5ptg9vsgb1grvg5hhm.apps.googleusercontent.com';
 
 function AppContent() {
     const location = useLocation();
