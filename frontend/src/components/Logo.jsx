@@ -20,7 +20,7 @@ const Logo = ({ size = 32, className = "", hideText = false }) => {
             <svg
                 width={hideText ? size : size * aspectRatio}
                 height={size}
-                viewBox={hideText ? "5 0 30 40" : "42.5 0 155 40"}
+                viewBox={hideText ? "40 0 25 40" : "42.5 0 155 40"}
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 className="overflow-visible"

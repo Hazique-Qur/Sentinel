@@ -2,14 +2,9 @@ import os
 import logging
 from fastapi import FastAPI, Query, HTTPException, APIRouter, Body
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from config.config import Config
-from src.ingestion.weather_service import WeatherService
-from src.ingestion.satellite_service import SatelliteService
-from src.processing.feature_engineer import FeatureEngineer
-from src.models.risk_aggregator import RiskAggregator
-from src.utils.shelter_service import ShelterService
-from src.utils.auth_utils import verify_google_token
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -37,6 +32,7 @@ async def verify_auth(payload: dict = Body(...)):
     """
     Verifies Google OAuth token and returns user info.
     """
+    from src.utils.auth_utils import verify_google_token
     token = payload.get("credential")
     if not token:
         raise HTTPException(status_code=400, detail="Missing credential")
@@ -59,6 +55,12 @@ async def get_risk_response(
     Unified endpoint for the Sentinel frontend.
     Returns structured risk, actions, and shelters.
     """
+    from src.ingestion.weather_service import WeatherService
+    from src.ingestion.satellite_service import SatelliteService
+    from src.processing.feature_engineer import FeatureEngineer
+    from src.models.risk_aggregator import RiskAggregator
+    from src.utils.shelter_service import ShelterService
+
     logger.info(f"Incoming Risk Analysis Request: Lat={lat}, Lon={lon}")
     
     try:
@@ -115,6 +117,29 @@ async def get_risk_response(
 
 # Register router
 app.include_router(api_router)
+
+# Serve static files for production
+frontend_dist = os.path.join(os.getcwd(), "frontend", "dist")
+
+if os.path.exists(frontend_dist):
+    # Mount assets folder specifically
+    assets_path = os.path.join(frontend_dist, "assets")
+    if os.path.exists(assets_path):
+        app.mount("/assets", StaticFiles(directory=assets_path), name="assets")
+
+    # Catch-all for React Router - serves index.html for any non-API route
+    @app.get("/{full_path:path}")
+    async def serve_react_app(full_path: str):
+        # Allow API routes to pass through (though they should be caught by api_router)
+        if full_path.startswith("api"):
+            return JSONResponse(status_code=404, content={"detail": "Not Found"})
+        
+        index_file = os.path.join(frontend_dist, "index.html")
+        if os.path.exists(index_file):
+            return FileResponse(index_file)
+        return JSONResponse(status_code=404, content={"detail": "Frontend build not found"})
+else:
+    logger.warning(f"Frontend dist not found at {frontend_dist}. Running in API-only mode.")
 
 if __name__ == "__main__":
     import uvicorn

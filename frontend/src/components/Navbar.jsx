@@ -71,11 +71,20 @@ const Navbar = () => {
                             onClick={() => setDropdownOpen(prev => !prev)}
                             className="flex items-center gap-2.5 bg-white/5 hover:bg-white/10 border border-white/10 px-3 py-2 rounded-xl transition-all"
                         >
-                            <img
-                                src={user.picture}
-                                alt={user.name}
-                                className="w-7 h-7 rounded-full border border-white/20"
-                            />
+                            <div className="w-7 h-7 rounded-full border border-white/20 bg-blue-500/20 flex items-center justify-center overflow-hidden">
+                                {user.picture ? (
+                                    <img
+                                        src={user.picture}
+                                        alt={user.name}
+                                        referrerPolicy="no-referrer"
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+                                    />
+                                ) : null}
+                                <div className="hidden items-center justify-center w-full h-full text-[10px] font-bold text-blue-400">
+                                    {user.name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                                </div>
+                            </div>
                             <span className="text-sm font-semibold text-slate-200 hidden sm:block max-w-[100px] truncate">
                                 {user.name?.split(' ')[0]}
                             </span>
