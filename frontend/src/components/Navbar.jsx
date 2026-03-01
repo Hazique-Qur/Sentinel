@@ -4,8 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutDashboard, Info, Home, Zap, Tag, LogOut, ChevronDown } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
+import NotificationSystem from './NotificationSystem';
 
-const Navbar = () => {
+const Navbar = ({ alerts, unreadCount, onMarkRead, onClearAll }) => {
     const location = useLocation();
     const { user, logout } = useAuth();
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -65,6 +66,13 @@ const Navbar = () => {
 
             {/* Auth Area */}
             <div className="flex items-center gap-3">
+                <NotificationSystem
+                    alerts={alerts}
+                    unreadCount={unreadCount}
+                    onMarkRead={onMarkRead}
+                    onClearAll={onClearAll}
+                />
+
                 {user ? (
                     <div className="relative" ref={dropdownRef}>
                         <button

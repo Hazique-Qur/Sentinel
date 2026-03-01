@@ -217,3 +217,92 @@
   @apply w-full h-[400px] rounded-2xl border border-white/10;
   background: #0f172a !important;
 }
+
+/* ─────────────────────────────────────────────────────────
+   4-TIER GOVERNMENT ALERT SYSTEM — CSS Utilities
+────────────────────────────────────────────────────────── */
+
+/* Left-border accent per tier */
+.tier-border-1 {
+  border-left: 4px solid rgba(34, 197, 94, 0.6);
+}
+
+.tier-border-2 {
+  border-left: 4px solid rgba(234, 179, 8, 0.6);
+}
+
+.tier-border-3 {
+  border-left: 4px solid rgba(249, 115, 22, 0.7);
+}
+
+.tier-border-4 {
+  border-left: 4px solid rgba(239, 68, 68, 0.8);
+}
+
+/* Level 1 — Advisory (Green, gentle pulse) */
+.alert-level-1 {
+  animation: alert-glow-green 4s ease-in-out infinite;
+}
+
+@keyframes alert-glow-green {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.05);
+  }
+
+  50% {
+    box-shadow: 0 0 25px rgba(34, 197, 94, 0.15);
+  }
+}
+
+/* Level 2 — Watch (Yellow, moderate pulse) */
+.alert-level-2 {
+  animation: alert-glow-yellow 3s ease-in-out infinite;
+}
+
+@keyframes alert-glow-yellow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(234, 179, 8, 0.08);
+  }
+
+  50% {
+    box-shadow: 0 0 35px rgba(234, 179, 8, 0.20);
+  }
+}
+
+/* Level 3 — Warning (Orange, visible pulse) */
+.alert-level-3 {
+  animation: alert-glow-orange 2.5s ease-in-out infinite;
+}
+
+@keyframes alert-glow-orange {
+
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(249, 115, 22, 0.12);
+  }
+
+  50% {
+    box-shadow: 0 0 50px rgba(249, 115, 22, 0.30);
+  }
+}
+
+/* Level 4 — Emergency (Red, rapid intense pulse) */
+.alert-level-4 {
+  animation: alert-glow-red 1.5s ease-in-out infinite;
+}
+
+@keyframes alert-glow-red {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.20);
+  }
+
+  50% {
+    box-shadow: 0 0 70px rgba(239, 68, 68, 0.50);
+  }
+}

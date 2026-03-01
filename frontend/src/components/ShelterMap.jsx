@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap, Circle } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, Circle, CircleMarker } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -34,9 +34,40 @@ const shelterIcon = new L.Icon({
     shadowSize: [41, 41]
 });
 
+// ─── Heatmap grid overlay ───
+const HeatmapLayer = ({ regionRisk }) => {
+    if (!regionRisk || regionRisk.length === 0) return null;
+
+    return (
+        <>
+            {regionRisk.map((p, idx) => (
+                <CircleMarker
+                    key={idx}
+                    center={[p.lat, p.lon]}
+                    pathOptions={{
+                        fillColor: p.color,
+                        color: p.color,
+                        weight: 0,
+                        fillOpacity: 0.35
+                    }}
+                    radius={12}
+                >
+                    <Popup>
+                        <div className="text-[10px] font-bold uppercase text-slate-500 mb-1 font-['Outfit']">Sector Analysis</div>
+                        <div className="text-sm font-bold flex items-center gap-2" style={{ color: p.color }}>
+                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
+                            Risk: {p.riskScore}%
+                        </div>
+                    </Popup>
+                </CircleMarker>
+            ))}
+        </>
+    );
+};
+
 function ChangeView({ center }) {
     const map = useMap();
-    map.setView(center, 13);
+    map.setView(center, 12);
     return null;
 }
 
@@ -52,7 +83,7 @@ function FlyToNearestShelter({ shelters, risk }) {
     return null;
 }
 
-const ShelterMap = ({ shelters, center, risk, score }) => {
+const ShelterMap = ({ shelters, center, risk, score, regionRisk }) => {
     const getRiskColor = () => {
         if (risk === 'High') return '#ef4444';
         if (risk === 'Medium') return '#eab308';
@@ -61,13 +92,16 @@ const ShelterMap = ({ shelters, center, risk, score }) => {
 
     return (
         <div className="h-[400px] w-full relative z-0">
-            <MapContainer center={center} zoom={13} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
+            <MapContainer center={center} zoom={12} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
                 <ChangeView center={center} />
                 <FlyToNearestShelter shelters={shelters} risk={risk} />
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
                     url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
                 />
+
+                {/* Heatmap Layer */}
+                <HeatmapLayer regionRisk={regionRisk} />
 
                 {/* Risk Radius Circle */}
                 {score > 0 && (
@@ -77,21 +111,21 @@ const ShelterMap = ({ shelters, center, risk, score }) => {
                             fillColor: getRiskColor(),
                             color: getRiskColor(),
                             weight: 1,
-                            fillOpacity: 0.15
+                            fillOpacity: 0.1
                         }}
-                        radius={score * 100} // Radius in meters
+                        radius={score * 80}
                     />
                 )}
 
                 {/* User Location with Pulsing Effect */}
                 <Marker position={center} icon={risk === 'High' ? pulsingUserIcon : DefaultIcon}>
                     <Popup>
-                        <div className="font-bold text-slate-900">Your Current Position</div>
-                        <div className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">Priority Sector</div>
+                        <div className="font-bold text-slate-900">Operation Center</div>
+                        <div className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">Base Telemetry</div>
                     </Popup>
                 </Marker>
 
-                {/* Shelters with Dynamic Visuals */}
+                {/* Shelters */}
                 {Array.isArray(shelters) && shelters.map((shelter, idx) => (
                     <Marker
                         key={idx}
@@ -114,7 +148,7 @@ const ShelterMap = ({ shelters, center, risk, score }) => {
 
                                 {risk === 'High' && (
                                     <div className="mt-2 text-[10px] bg-red-50 text-red-600 p-2 rounded-lg font-bold border border-red-100 italic">
-                                        ⚠ Designated Emergency Route Active
+                                        ⚠ Emergency Route Active
                                     </div>
                                 )}
                             </div>
