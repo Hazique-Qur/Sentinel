@@ -38,15 +38,6 @@ const BG_TINTS = {
     4: 'bg-red-950/25',
 };
 
-const TelemetryCard = ({ icon, label, value }) => (
-    <div className="flex flex-col gap-1 bg-white/5 p-3 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
-        <div className="flex items-center gap-2">
-            {icon}
-            <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider">{label}</span>
-        </div>
-        <p className="text-xl font-bold font-['Outfit']">{value}</p>
-    </div>
-);
 
 const DashboardPage = ({
     appState,
