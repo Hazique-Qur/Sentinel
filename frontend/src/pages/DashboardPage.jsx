@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import {
     Activity, Shield, MapPin, RefreshCw, AlertTriangle,
     Navigation, Thermometer, Droplets, ShieldAlert,
