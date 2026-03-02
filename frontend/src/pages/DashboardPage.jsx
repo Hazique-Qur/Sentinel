@@ -344,6 +344,20 @@ const DashboardPage = ({
                                 fleet={appState.fleet}
                             />
                         </motion.div>
+                    ) : appState.viewMode === 'federation' ? (
+                        <motion.div
+                            key="federation-view"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            className="py-4"
+                        >
+                            <FederatedCommand
+                                federation={appState.federation}
+                                onSync={onSyncFederation}
+                                isSyncing={appState.isSyncing}
+                            />
+                        </motion.div>
                     ) : (
                         <motion.div
                             key="detail-view"
