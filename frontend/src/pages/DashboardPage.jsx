@@ -413,10 +413,11 @@ const DashboardPage = ({
                                     />
 
                                     {/* Phase 14: Predictive Escalation Warning */}
-                                    {appState.viewLevel === 'advanced' && appState.escalationProb > 0.4 && (
+                                    {appState.viewLevel === 'advanced' && (appState.escalationProb > 0.4 || (appState.risk?.cross_region_alerts && appState.risk.cross_region_alerts.length > 0)) && (
                                         <EscalationWarning
                                             probability={appState.escalationProb}
                                             currentRisk={appState.risk?.adjusted_score || 0}
+                                            crossRegionAlerts={appState.risk?.cross_region_alerts || []}
                                         />
                                     )}
 

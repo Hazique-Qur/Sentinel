@@ -105,12 +105,30 @@ class FederationEngine:
             "last_sync": datetime.utcnow().isoformat()
         }
 
-    def detect_cross_region_anomalies(self, recent_threats: List[Dict]) -> List[Dict]:
+    def detect_cross_region_anomalies(self) -> List[Dict]:
         """
         Identify threat patterns that successfully triggered alerts in one region
         which might be early-warning precursors for another.
         """
         anomalies = []
-        # Logic: If Region A (Upstream) has High Risk factors, flag for Region B
-        # Placeholder for complex geospatial correlation logic
+        regional_status = self.get_federation_status()["regional_intelligence"]
+        
+        # Filter for regions currently experiencing "Warning" or "Emergency" levels
+        # (Using mean_absolute_error as a proxy for high-activity in this demo logic,
+        # but in production we'd look at the latest risk snapshots from and across regions)
+        high_risk_regions = [r for r in regional_status if r["metrics"]["confidence_calibration"] > 0.9 and r["data_points"] > 5]
+        
+        for r in high_risk_regions:
+            # If a region has high accuracy and specific dominant weights, 
+            # share that 'mode' as a warning for others
+            dominant_factor = max(r["weights"], key=r["weights"].get)
+            if r["weights"][dominant_factor] > 0.5:
+                anomalies.append({
+                    "source_region": r["region_id"],
+                    "type": "Cross-Region Momentum",
+                    "threat": f"High {dominant_factor.replace('_', ' ')} intensity detected in {r['region_id'].capitalize()}",
+                    "severity": "High",
+                    "confidence": r["metrics"]["confidence_calibration"]
+                })
+        
         return anomalies

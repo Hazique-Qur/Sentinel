@@ -6,6 +6,7 @@ from src.models.heatwave_model import HeatwavePredictor
 from src.processing.vulnerability_manager import VulnerabilityManager
 from src.models.insight_engine import InsightEngine
 from src.models.learning_engine import LearningEngine
+from src.models.federation_engine import FederationEngine
 
 
 def _get_alert_tier(score: float) -> dict:
@@ -202,6 +203,15 @@ def _get_region_id(lat: Optional[float], lon: Optional[float]) -> str:
         return "sindh"
     return "punjab"
 
+def _get_cross_region_alerts() -> list:
+    """Retrieves broader-scale anomalies from the federation layer."""
+    try:
+        federation = FederationEngine()
+        return federation.detect_cross_region_anomalies()
+    except Exception as e:
+        # Prevent telemetry failure from breaking core risk loop
+        return []
+
 class RiskAggregator:
     def __init__(self):
         self.agents = [
@@ -308,5 +318,5 @@ class RiskAggregator:
             "prediction_id": prediction_id,
             "active_weights": weights,
             "region_id": region_id,
-            "cross_region_alerts": [] # Cross-region anomaly awareness hook
+            "cross_region_alerts": _get_cross_region_alerts()
         }

@@ -305,7 +305,8 @@ async def get_risk_response(
                 "level": results["overall_risk_level"],
                 "confidence": results["confidence"],
                 "confidence_reason": results.get("confidence_reason", ""),
-                "alert_tier": alert_tier
+                "alert_tier": alert_tier,
+                "cross_region_alerts": results.get("cross_region_alerts", [])
             },
             "priority": results["priority"],
             "primary_threat": results["primary_threat"],

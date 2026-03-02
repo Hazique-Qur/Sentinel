@@ -2,11 +2,11 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle, ArrowUpRight, Clock, ShieldAlert } from 'lucide-react';
 
-const EscalationWarning = ({ probability, timeframe = "24h", currentRisk }) => {
-    // Only show if probability is significant (> 40%)
-    if (probability < 0.4) return null;
+const EscalationWarning = ({ probability, timeframe = "24h", currentRisk, crossRegionAlerts = [] }) => {
+    // Show if probability is significant OR if there are federated alerts
+    if (probability < 0.4 && crossRegionAlerts.length === 0) return null;
 
-    const isHigh = probability >= 0.7;
+    const isHigh = probability >= 0.7 || crossRegionAlerts.length > 0;
     const isCritical = probability >= 0.85 || currentRisk >= 70;
 
     const theme = {
@@ -57,29 +57,51 @@ const EscalationWarning = ({ probability, timeframe = "24h", currentRisk }) => {
                                 <span className="text-[10px] font-mono text-slate-500 uppercase">Within next {timeframe}</span>
                             </div>
                         </div>
-                        <div className="text-right">
-                            <div className={`text-lg font-black font-['Outfit'] ${theme.text}`}>
-                                {Math.round(probability * 100)}%
+                        {probability >= 0.4 && (
+                            <div className="text-right">
+                                <div className={`text-lg font-black font-['Outfit'] ${theme.text}`}>
+                                    {Math.round(probability * 100)}%
+                                </div>
+                                <div className="text-[8px] uppercase font-bold text-slate-500 tracking-widest">PROBABILITY</div>
                             </div>
-                            <div className="text-[8px] uppercase font-bold text-slate-500 tracking-widest">PROBABILITY</div>
-                        </div>
+                        )}
                     </div>
 
-                    <div className="space-y-2">
-                        <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                            <motion.div
-                                initial={{ width: 0 }}
-                                animate={{ width: `${probability * 100}%` }}
-                                transition={{ duration: 1, ease: "easeOut" }}
-                                className={`h-full ${theme.accent} shadow-[0_0_8px_rgba(255,255,255,0.2)]`}
-                            />
+                    {probability >= 0.4 && (
+                        <div className="space-y-2">
+                            <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                <motion.div
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${probability * 100}%` }}
+                                    transition={{ duration: 1, ease: "easeOut" }}
+                                    className={`h-full ${theme.accent} shadow-[0_0_8px_rgba(255,255,255,0.2)]`}
+                                />
+                            </div>
+                            <p className="text-[11px] text-slate-400 leading-relaxed font-['Inter']">
+                                Predictive modeling indicates a {isCritical ? 'very high' : 'statistical'} likelihood of
+                                <span className={`font-bold ${theme.text}`}> Level 4 Emergency</span> escalation.
+                                Recommend early activation of local response protocols.
+                            </p>
                         </div>
-                        <p className="text-[11px] text-slate-400 leading-relaxed font-['Inter']">
-                            Predictive modeling indicates a {isCritical ? 'very high' : 'statistical'} likelihood of
-                            <span className={`font-bold ${theme.text}`}> Level 4 Emergency</span> escalation.
-                            Recommend early activation of local response protocols.
-                        </p>
-                    </div>
+                    )}
+
+                    {/* Federated Awareness Section */}
+                    {crossRegionAlerts.length > 0 && (
+                        <div className="pt-2 border-t border-white/5 space-y-2">
+                            <div className="flex items-center gap-2">
+                                <ArrowUpRight size={12} className="text-blue-400" />
+                                <span className="text-[9px] font-bold uppercase tracking-widest text-blue-400">Federated Awareness (Provincial Correlation)</span>
+                            </div>
+                            {crossRegionAlerts.map((alert, idx) => (
+                                <div key={idx} className="bg-white/5 p-2 rounded-lg border border-white/5">
+                                    <p className="text-[10px] text-white font-bold">{alert.threat}</p>
+                                    <p className="text-[9px] text-slate-500 mt-1 uppercase tracking-tighter">
+                                        Source: {alert.source_region} — Type: {alert.type}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
 
                     <div className="flex items-center gap-2 pt-1">
                         <ArrowUpRight size={12} className={theme.text} />
