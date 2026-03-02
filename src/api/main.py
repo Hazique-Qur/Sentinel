@@ -321,7 +321,8 @@ async def get_risk_response(
                 "timestamp": weather.get("timestamp"),
                 "latency_ms": latency_ms,
                 "cached": False,
-                "generated_at": datetime.utcnow().isoformat() + "Z"
+                "generated_at": datetime.utcnow().isoformat() + "Z",
+                "raw_features": features
             }
         }
 
@@ -487,10 +488,7 @@ async def get_risk_forecast(
     
     # 4. Anomaly Detection
     # Re-extract features briefly for anomaly check (optimization: could be cached)
-    from src.processing.feature_engineer import FeatureEngineer
-    feature_eng = FeatureEngineer()
-    # Mocking historical avg check for now
-    anomaly_status = forecaster.detect_anomalies(current_data.get("risk_factors", {}), {})
+    anomaly_status = forecaster.detect_anomalies(current_data.get("metadata", {}).get("raw_features", {}), {})
     
     return {
         "status": "success",
