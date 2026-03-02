@@ -15,6 +15,7 @@ import RiskForecastGraph from '../components/RiskForecastGraph';
 import EscalationWarning from '../components/EscalationWarning';
 import ModelPerformance from '../components/ModelPerformance';
 import FederatedCommand from '../components/FederatedCommand';
+import Logo from '../components/Logo';
 import { Brain, Globe } from 'lucide-react';
 
 // Helper: synthesise an alertTier object from a numeric score (0–100)
@@ -149,7 +150,7 @@ const DashboardPage = ({
                         <button
                             onClick={() => setAppState(prev => ({ ...prev, viewMode: 'federation' }))}
                             className={`p-2 rounded-lg transition-all ${appState.viewMode === 'federation' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/40' : 'text-slate-400 hover:bg-white/5'}`}
-                            title="Federation Command"
+                            title="Federated Execution Command"
                         >
                             <Globe size={16} />
                         </button>
