@@ -1,5 +1,14 @@
 {
-    "version": 2,
+    "rewrites": [
+        {
+            "source": "/api/(.*)",
+            "destination": "/api/index.py"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/$1"
+        }
+    ],
     "builds": [
         {
             "src": "api/index.py",
@@ -11,20 +20,6 @@
             "config": {
                 "distDir": "dist"
             }
-        }
-    ],
-    "routes": [
-        {
-            "src": "/api/(.*)",
-            "dest": "api/index.py"
-        },
-        {
-            "src": "/assets/(.*)",
-            "dest": "frontend/assets/$1"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "frontend/$1"
         }
     ]
 }
