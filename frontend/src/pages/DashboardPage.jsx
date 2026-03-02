@@ -16,6 +16,7 @@ import RiskForecastGraph from '../components/RiskForecastGraph';
 import EscalationWarning from '../components/EscalationWarning';
 import ModelPerformance from '../components/ModelPerformance';
 import FederatedCommand from '../components/FederatedCommand';
+import LocationManager from '../components/LocationManager';
 import Logo from '../components/Logo';
 import { Brain, Globe } from 'lucide-react';
 
