@@ -20,6 +20,7 @@ import Logo from '../components/Logo';
 import { Brain, Globe } from 'lucide-react';
 
 // Helper: synthesise an alertTier object from a numeric score (0–100)
+// Updated for Phase 16: Federated Consensus Tracking
 const scoreToAlertTier = (score) => {
     if (score >= 76) return { level: 4, label: 'Emergency', color: 'red', hex: '#ef4444', situation: 'Immediate action required', description: 'Immediate evacuation may be required. Activate all emergency protocols.', recommended_action_level: 'CRITICAL — Emergency Response Active' };
     if (score >= 56) return { level: 3, label: 'Warning', color: 'orange', hex: '#f97316', situation: 'High likelihood of impact', description: 'Significant risk detected. Prepare for immediate action and follow official directives.', recommended_action_level: 'High Preparedness Required' };
