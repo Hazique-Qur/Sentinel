@@ -293,7 +293,8 @@ async def get_risk_response(
         _trigger_notification(lat, lon, prev_level, alert_tier["level"], alert_tier["label"])
         
         # Store snapshot (historical data)
-        _store_snapshot(lat, lon, results["adjusted_risk_score"], alert_tier["level"], alert_tier["label"], alert_tier["color"])
+        ts_now = datetime.utcnow().isoformat() + "Z"
+        _store_snapshot(lat, lon, results["adjusted_risk_score"], alert_tier["level"], alert_tier["label"], alert_tier["color"], ts_now)
         
         response = {
             "status": "success",
@@ -323,14 +324,6 @@ async def get_risk_response(
             }
         }
 
-        # Store snapshot in per-location history + global log
-        ts_now = datetime.utcnow().isoformat() + "Z"
-        _store_snapshot(lat, lon,
-                        score=results["adjusted_risk_score"],
-                        alert_level=alert_tier["level"],
-                        alert_label=alert_tier["label"],
-                        color=alert_tier["color"],
-                        ts=ts_now)
         _alert_history.append({
             "location": {"lat": lat, "lon": lon},
             "riskScore": results["adjusted_risk_score"],
