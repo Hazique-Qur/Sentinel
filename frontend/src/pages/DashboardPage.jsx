@@ -8,12 +8,41 @@ import AlertBanner from '../components/AlertBanner';
 import AlertTierBadge from '../components/AlertTierBadge';
 import RiskFactors from '../components/RiskFactors';
 import Logo from '../components/Logo';
+import PredictiveTimeline from '../components/PredictiveTimeline';
+import DecisionEngine from '../components/DecisionEngine';
 
 const DashboardPage = ({ appState, setAppState, fetchRiskData }) => {
-    const riskLevel = appState.risk?.level || 'Low';
-    const alertTier = appState.risk?.alert_tier;
+    const [forecast, setForecast] = useState([]);
+    const [scrubbedRisk, setScrubbedRisk] = useState(null);
+
+    const riskLevel = scrubbedRisk?.level || appState.risk?.level || 'Low';
+    const alertTier = scrubbedRisk?.alert_tier || appState.risk?.alert_tier;
     const riskFactors = appState.risk?.risk_factors;
     const dataSources = appState.risk?.data_sources || ["Satellite Data Engine", "Meteorological Feed", "Historical DB"];
+
+    useEffect(() => {
+        const fetchForecast = async () => {
+            try {
+                const url = `${import.meta.env.VITE_API_URL || ''}/api/predictive-forecast?lat=${appState.location.lat}&lon=${appState.location.lon}`;
+                const res = await fetch(url);
+                const data = await res.json();
+                if (data.status === 'success') {
+                    setForecast(data.forecast);
+                }
+            } catch (err) {
+                console.error("Forecast fetch failed:", err);
+            }
+        };
+        if (appState.location.lat) fetchForecast();
+    }, [appState.location]);
+
+    const handleScrub = (point) => {
+        setScrubbedRisk({
+            level: point.tier >= 4 ? 'High' : point.tier === 3 ? 'Medium' : 'Low',
+            alert_tier: { level: point.tier, label: point.tier >= 4 ? 'Emergency' : point.tier === 3 ? 'Warning' : 'Advisory', color: point.tier >= 4 ? 'red' : point.tier === 3 ? 'amber' : 'emerald' },
+            adjusted_score: point.score
+        });
+    };
 
     const loading = !appState.risk;
 
@@ -120,14 +149,22 @@ const DashboardPage = ({ appState, setAppState, fetchRiskData }) => {
                                 center={[appState.location.lat, appState.location.lon]}
                                 shelters={appState.shelters || []}
                                 riskLevel={riskLevel}
-                                score={appState.risk?.adjusted_score || 0}
+                                score={scrubbedRisk?.adjusted_score || appState.risk?.adjusted_score || 0}
                             />
                         </div>
+
+                        <PredictiveTimeline
+                            forecast={forecast}
+                            onScrub={handleScrub}
+                        />
                     </div>
 
-                    {/* Row 2: Action Intelligence (Bottom Full Width) */}
-                    <div className="xl:col-span-12">
-                        <ActionList actions={appState.actions} alertTier={alertTier} />
+                    {/* Column 3: Tactical Decision Unit */}
+                    <div className="xl:col-span-4 lg:col-span-12">
+                        <DecisionEngine
+                            tier={alertTier?.level || 1}
+                            threats={appState.risk?.threat_vectors || [appState.primary_threat]}
+                        />
                     </div>
                 </div>
             </main>

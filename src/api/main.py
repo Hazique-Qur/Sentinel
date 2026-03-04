@@ -475,38 +475,6 @@ async def get_risk_history(
     }
 
 
-@api_router.get("/risk/forecast")
-@limiter.limit("30/minute")
-async def get_risk_forecast(
-    request: Request,
-    lat: float = Query(Config.DEFAULT_LAT),
-    lon: float = Query(Config.DEFAULT_LON)
-):
-    """
-    Predictive research endpoint. Projects risk into 24h horizon.
-    """
-    validate_coordinates(lat, lon)
-    
-    # 1. Get current telemetry (cached where possible)
-    current_data = await get_risk_response(request, lat, lon)
-    if isinstance(current_data, JSONResponse):
-        return current_data
-        
-    # 2. Extract history
-    key = _loc_key(lat, lon)
-    history = _location_history.get(key, [])
-    
-    # 3. Predict
-    from src.models.forecaster import RiskForecaster
-    forecaster = RiskForecaster()
-    
-    current_risk = current_data["risk"]["adjusted_score"]
-    prediction = forecaster.forecast_risk(history, current_risk)
-    
-    # 4. Anomaly Detection
-    # Re-extract features briefly for anomaly check (optimization: could be cached)
-    anomaly_status = forecaster.detect_anomalies(current_data.get("metadata", {}).get("raw_features", {}), {})
-    
     return {
         "status": "success",
         "currentRisk": current_risk,
@@ -517,6 +485,56 @@ async def get_risk_forecast(
         "metadata": {
             "location": {"lat": lat, "lon": lon},
             "generated_at": datetime.utcnow().isoformat() + "Z"
+        }
+    }
+
+
+@api_router.get("/predictive-forecast")
+@limiter.limit("30/minute")
+async def get_predictive_forecast(
+    request: Request,
+    lat: float = Query(Config.DEFAULT_LAT),
+    lon: float = Query(Config.DEFAULT_LON)
+):
+    """
+    Phase 9 Sovereign Intelligence: Returns a high-fidelity 24h risk projection.
+    """
+    validate_coordinates(lat, lon)
+    
+    from src.models.risk_engine_v3 import RiskEngineV3
+    from src.ingestion.weather_service import WeatherService
+    from src.ingestion.satellite_service import SatelliteService
+    from src.processing.feature_engineer import FeatureEngineer
+    
+    engine = RiskEngineV3()
+    weather_svc = WeatherService()
+    satellite_svc = SatelliteService()
+    feature_eng = FeatureEngineer()
+    
+    weather = weather_svc.get_current_weather(lat, lon) or {}
+    ndvi = satellite_svc.get_ndvi(lat, lon) or 0.5
+    features = feature_eng.extract_features(weather, {"ndvi": ndvi, "water_coverage": 0.0})
+    
+    # Map features to V3 expected keys
+    v3_features = {
+        "rainfall_intensity": features.get("rain", 0),
+        "temp": features.get("temp", 20),
+        "wind_speed": features.get("wind_speed", 0),
+        "soil_moisture": 0.3 + (features.get("humidity", 50) / 200), # Derived heuristic
+        "slope": 5.0 # Placeholder for geological data
+    }
+    
+    analysis = engine.analyze_vulnerability(v3_features, lat, lon)
+    forecast = engine.project_forecast(analysis["score"])
+    
+    return {
+        "status": "success",
+        "analysis": analysis,
+        "forecast": forecast,
+        "metadata": {
+            "location": {"lat": lat, "lon": lon},
+            "engine": "RiskEngineV3",
+            "timestamp": datetime.utcnow().isoformat() + "Z"
         }
     }
 
