@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, Info, Home, Zap, Tag, LogOut, ChevronDown } from 'lucide-react';
+import { LayoutDashboard, Info, Home, Zap, Tag, LogOut, ChevronDown, Globe } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
 import NotificationSystem from './NotificationSystem';
@@ -16,6 +16,7 @@ const Navbar = ({ alerts, unreadCount, onMarkRead, onClearAll }) => {
     const navLinks = [
         { to: '/', label: 'Home', icon: <Home size={16} /> },
         { to: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard size={16} /> },
+        { to: '/global', label: 'Global Network', icon: <Globe size={16} /> },
         { to: '/demo', label: 'Simulate', icon: <Zap size={16} /> },
         { to: '/pricing', label: 'Pricing', icon: <Tag size={16} /> },
         { to: '/about', label: 'About', icon: <Info size={16} /> },

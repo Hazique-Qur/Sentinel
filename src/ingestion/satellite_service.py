@@ -41,13 +41,54 @@ class SatelliteService:
             print(f"Error extracting NDVI: {e}")
             return None
 
-    def get_water_coverage(self, lat, lon):
-        # Implementation for water coverage using JRC Global Surface Water or similar
+    def get_water_index(self, lat, lon):
+        """Extracts NDWI (Modified Normalized Difference Water Index) to identify flood signatures."""
         if not self.initialized and not self.initialize():
             return None
+
+        region = ee.Geometry.Point([lon, lat])
+        # Using Landsat 8 Surface Reflectance for high-fidelity water detection
+        dataset = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2').filterBounds(region).sort('CLOUD_COVER').first()
         
-        # Placeholder for water coverage logic
-        return 0.0
+        try:
+            # Formula: (Green - SWIR) / (Green + SWIR)
+            ndwi = dataset.normalizedDifference(['SR_B3', 'SR_B6']).rename('NDWI')
+            stats = ndwi.reduceRegion(
+                reducer=ee.Reducer.mean(),
+                geometry=region,
+                scale=30
+            ).get('NDWI')
+            
+            info = stats.getInfo()
+            return round(info, 3) if info is not None else 0.0
+        except Exception as e:
+            print(f"Error extracting NDWI: {e}")
+            return 0.0
+
+    def get_thermal_data(self, lat, lon):
+        """Extracts LST (Land Surface Temperature) to identify heatwave hotspots."""
+        if not self.initialized and not self.initialize():
+            return None
+
+        region = ee.Geometry.Point([lon, lat])
+        dataset = ee.ImageCollection('MODIS/061/MOD11A1').filterBounds(region).sort('system:time_start', False).first()
+        
+        try:
+            # LST_Day_1km is in Kelvin scaled by 0.02
+            lst_kelvin = dataset.select('LST_Day_1km').reduceRegion(
+                reducer=ee.Reducer.mean(),
+                geometry=region,
+                scale=1000
+            ).get('LST_Day_1km')
+            
+            val = lst_kelvin.getInfo()
+            if val is not None:
+                celsius = (val * 0.02) - 273.15
+                return round(celsius, 1)
+            return None
+        except Exception as e:
+            print(f"Error extracting Thermal Data: {e}")
+            return None
 
 if __name__ == "__main__":
     service = SatelliteService()

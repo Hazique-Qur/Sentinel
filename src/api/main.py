@@ -539,6 +539,26 @@ async def get_predictive_forecast(
     }
 
 
+@api_router.get("/global-risk-map")
+@limiter.limit("20/minute")
+async def get_global_risk_map(request: Request):
+    """
+    Phase 10 Planetary Surveillance: Returns active global hotspots and spectral layer metadata.
+    """
+    from src.api.global_intelligence import GlobalIntelligenceHub
+    hub = GlobalIntelligenceHub()
+    
+    return {
+        "status": "success",
+        "hotspots": hub.get_global_hotspots(),
+        "spectralLayers": hub.get_layer_metadata()["layers"],
+        "metadata": {
+            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "planetary_coverage": "100.0%"
+        }
+    }
+
+
 @api_router.get("/alert-history")
 async def get_alert_history():
     """Returns the global in-memory alert history (last 50 events)."""

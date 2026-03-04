@@ -11,6 +11,7 @@ import AboutPage from './pages/AboutPage';
 import DemoPage from './pages/DemoPage';
 import LoginPage from './pages/LoginPage';
 import PricingPage from './pages/PricingPage';
+import GlobalMapPage from './pages/GlobalMapPage';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '211873885831-hglvk74j8vqplt5ptg9vsgb1grvg5hhm.apps.googleusercontent.com';
 
@@ -373,6 +374,14 @@ function AppContent() {
                     <Route path="/pricing" element={<PricingPage />} />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/demo" element={<DemoPage />} />
+                    <Route
+                        path="/global"
+                        element={
+                            <ProtectedRoute>
+                                <GlobalMapPage />
+                            </ProtectedRoute>
+                        }
+                    />
                     <Route
                         path="/dashboard"
                         element={

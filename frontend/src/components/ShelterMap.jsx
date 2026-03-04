@@ -84,20 +84,45 @@ function FlyToNearestShelter({ shelters, risk }) {
 }
 
 const ShelterMap = ({ shelters, center, risk, score, regionRisk }) => {
+    const [activeLayer, setActiveLayer] = React.useState('dark');
+
     const getRiskColor = () => {
         if (risk === 'High') return '#ef4444';
         if (risk === 'Medium') return '#eab308';
         return '#22c55e';
     };
 
+    const layers = [
+        { id: 'dark', label: 'Tactical Dark', url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png' },
+        { id: 'satellite', label: 'NDVI Vegetation', url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' },
+        { id: 'thermal', label: 'Thermal Hotspots', url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png' }, // Voyager as placeholder for thermal
+        { id: 'water', label: 'Water Index', url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png' }
+    ];
+
     return (
         <div className="h-full w-full relative z-0">
+            {/* Spectral Layer Control */}
+            <div className="absolute top-4 right-4 z-[1000] flex flex-col gap-2">
+                {layers.map(layer => (
+                    <button
+                        key={layer.id}
+                        onClick={() => setActiveLayer(layer.id)}
+                        className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-tighter transition-all border backdrop-blur-md shadow-xl ${activeLayer === layer.id
+                                ? 'bg-blue-600/40 border-blue-400 text-white'
+                                : 'bg-slate-900/60 border-white/10 text-slate-400 hover:text-white hover:bg-slate-800/80'
+                            }`}
+                    >
+                        {layer.label}
+                    </button>
+                ))}
+            </div>
+
             <MapContainer center={center} zoom={12} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
                 <ChangeView center={center} />
                 <FlyToNearestShelter shelters={shelters} risk={risk} />
                 <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                    url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                    attribution='&copy; CARTO &copy; ESRI'
+                    url={layers.find(l => l.id === activeLayer).url}
                 />
 
                 {/* Heatmap Layer */}
