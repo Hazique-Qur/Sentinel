@@ -107,13 +107,13 @@ const DashboardPage = ({ appState, setAppState, fetchRiskData }) => {
                     <div className="xl:col-span-8 space-y-6">
                         <div className="glass p-2 border-white/5 h-[620px] relative overflow-hidden">
                             <div className="absolute top-4 left-4 z-[100] flex gap-2">
-                                <div className="bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-2">
-                                    <Globe size={12} className="text-blue-400" />
-                                    <span className="text-[10px] font-bold text-white uppercase tracking-wider">Geospatial Overlay</span>
+                                <div className="bg-slate-900/80 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10 flex items-center gap-2">
+                                    <Globe size={11} className="text-blue-400" />
+                                    <span className="text-[9px] font-semibold text-white uppercase tracking-wider">Geospatial Overlay</span>
                                 </div>
-                                <div className="bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-2">
-                                    <MapPin size={12} className="text-red-400" />
-                                    <span className="text-[10px] font-bold text-white uppercase tracking-wider">{appState.location.lat.toFixed(4)}, {appState.location.lon.toFixed(4)}</span>
+                                <div className="bg-slate-900/80 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10 flex items-center gap-2">
+                                    <MapPin size={11} className="text-red-400" />
+                                    <span className="text-[9px] font-semibold text-white uppercase tracking-wider">{appState.location.lat.toFixed(4)}, {appState.location.lon.toFixed(4)}</span>
                                 </div>
                             </div>
                             <ShelterMap

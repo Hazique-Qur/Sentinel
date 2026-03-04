@@ -44,6 +44,14 @@ const DemoPage = () => {
 
     const riskLevel = riskScore > 75 ? 'High' : riskScore > 40 ? 'Medium' : 'Low';
 
+    const handleStressTest = () => {
+        setParams({
+            rainfall: 98,
+            temp: 42,
+            wind: 95
+        });
+    };
+
     return (
         <div className="min-h-screen bg-slate-950 text-slate-50 pt-32 pb-20 px-6 overflow-hidden">
             <div className="max-w-6xl mx-auto">
@@ -94,7 +102,10 @@ const DemoPage = () => {
                             />
                         </div>
 
-                        <div className="bg-indigo-600 p-6 rounded-2xl shadow-2xl shadow-indigo-900/40 text-center cursor-pointer group hover:scale-[1.02] transition-all active:scale-95">
+                        <div
+                            onClick={handleStressTest}
+                            className="bg-indigo-600 p-6 rounded-2xl shadow-2xl shadow-indigo-900/40 text-center cursor-pointer group hover:scale-[1.02] transition-all active:scale-95"
+                        >
                             <h4 className="font-bold flex items-center justify-center gap-3">
                                 <Play size={20} fill="white" />
                                 Start Stress Test
