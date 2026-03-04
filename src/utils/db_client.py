@@ -6,14 +6,13 @@ class DBClient:
         self.client = MongoClient(Config.MONGODB_URI)
         self.db = self.client[Config.DATABASE_NAME]
 
-    def insert_disaster_data(self, data):
-        collection = self.db['disaster_records']
+    def log_audit(self, data):
+        """Logs risk queries for system transparency (internal use)."""
+        collection = self.db['audit_logs']
         try:
-            result = collection.insert_one(data)
-            return result.inserted_id
+            collection.insert_one(data)
         except Exception as e:
-            print(f"Error inserting to MongoDB: {e}")
-            return None
+            print(f"Error logging audit to MongoDB: {e}")
 
     def get_latest_records(self, limit=10):
         collection = self.db['disaster_records']

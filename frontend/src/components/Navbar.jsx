@@ -5,6 +5,7 @@ import { LayoutDashboard, Info, Home, Zap, Tag, LogOut, ChevronDown } from 'luci
 import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
 import NotificationSystem from './NotificationSystem';
+import SystemStatusBadge from './SystemStatusBadge';
 
 const Navbar = ({ alerts, unreadCount, onMarkRead, onClearAll }) => {
     const location = useLocation();
@@ -66,6 +67,9 @@ const Navbar = ({ alerts, unreadCount, onMarkRead, onClearAll }) => {
 
             {/* Auth Area */}
             <div className="flex items-center gap-3">
+                <div className="hidden lg:block mr-2">
+                    <SystemStatusBadge />
+                </div>
                 <NotificationSystem
                     alerts={alerts}
                     unreadCount={unreadCount}
