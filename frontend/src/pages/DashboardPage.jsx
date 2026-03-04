@@ -309,7 +309,7 @@ const DashboardPage = ({
                 </div>
             )}
 
-            <main className={`max-w-7xl mx-auto px-6 relative z-10 transition-all duration-700 ${isLocked && appState.viewMode === 'detail' ? 'scale-[0.98] pointer-events-none' : ''}`}>
+            <main className={`max-w-7xl mx-auto px-6 relative z-10 transition-all duration-700 ${isLocked && appState.viewMode === 'detail' ? 'scale-[0.98]' : ''}`}>
                 <AnimatePresence mode="wait">
                     {appState.viewMode === 'fleet' ? (
                         <motion.div
@@ -357,11 +357,11 @@ const DashboardPage = ({
                         </motion.div>
                     ) : (
                         <motion.div
-                            key="detail-view"
-                            initial={{ opacity: 0, scale: 0.98 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.98 }}
-                            className="grid grid-cols-1 lg:grid-cols-12 gap-6"
+                            key={appState.viewMode}
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -20 }}
+                            className="grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10"
                         >
                             {/* Emergency Protocol Lock */}
                             {isLocked && (
@@ -402,7 +402,7 @@ const DashboardPage = ({
                                         score={appState.risk?.adjusted_score || 0}
                                         level={appState.risk?.level || 'Low'}
                                         confidence={appState.risk?.confidence || 0}
-                                        confidenceReason={appState.risk?.confidenceReason}
+                                        confidenceReason={appState.risk?.confidence_reason}
                                         latestPredictionId={appState.latestPredictionId}
                                         primaryThreat={appState.primaryThreat}
                                         alertTier={appState.alertTier}
@@ -435,8 +435,8 @@ const DashboardPage = ({
                                     <div className="grid grid-cols-2 gap-4">
                                         <TelemetryCard
                                             icon={<Thermometer className="text-orange-400" size={16} />}
-                                            label="Ambient Temp"
-                                            value={`${appState.risk?.score ? (appState.risk.score + 15) : 0}°C`}
+                                            label="Risk Intensity Index"
+                                            value={`${appState.risk?.adjusted_score || 0}`}
                                         />
                                         <TelemetryCard
                                             icon={<Droplets className="text-blue-400" size={16} />}

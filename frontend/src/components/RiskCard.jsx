@@ -16,7 +16,7 @@ const TIER_BORDER = {
     4: 'border-l-4 border-l-red-500/80',
 };
 
-const RiskCard = ({ score, level, primaryThreat, loading, alertTier }) => {
+const RiskCard = ({ score, level, primaryThreat, loading, alertTier, confidence, confidenceReason, latestPredictionId }) => {
     const tierLevel = alertTier?.level ?? 1;
     const ringColor = TIER_RING[tierLevel] || TIER_RING[1];
     const borderClass = TIER_BORDER[tierLevel] || TIER_BORDER[1];
@@ -74,15 +74,27 @@ const RiskCard = ({ score, level, primaryThreat, loading, alertTier }) => {
                 </div>
             </div>
 
-            <div className="mt-1 w-full">
-                <p className="text-slate-400 text-xs mb-1">Primary Threat</p>
-                <p className="text-lg font-semibold">{primaryThreat || 'None Detected'}</p>
+            <div className="mt-1 w-full border-t border-white/5 pt-4">
+                <p className="text-slate-400 text-[10px] uppercase tracking-widest mb-1">Primary Threat</p>
+                <p className="text-lg font-bold font-['Outfit']">{primaryThreat || 'None Detected'}</p>
             </div>
 
-            {alertTier?.description && (
-                <p className={`text-[10px] text-center leading-relaxed px-2 opacity-70 ${ringColor}`}>
-                    {alertTier.description}
-                </p>
+            {confidenceReason && (
+                <div className="w-full bg-white/5 p-3 rounded-xl border border-white/5 mt-2">
+                    <div className="flex justify-between items-center mb-1">
+                        <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider">AI Confidence</span>
+                        <span className="text-[10px] font-mono font-bold text-blue-400">{Math.round(confidence * 100)}%</span>
+                    </div>
+                    <p className="text-[10px] text-left leading-relaxed text-slate-400 italic">
+                        {confidenceReason}
+                    </p>
+                </div>
+            )}
+
+            {latestPredictionId && (
+                <div className="mt-2 text-[8px] font-mono text-slate-600 uppercase tracking-tighter opacity-50">
+                    ID: {latestPredictionId}
+                </div>
             )}
         </motion.div>
     );

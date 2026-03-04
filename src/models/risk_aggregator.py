@@ -240,6 +240,11 @@ class RiskAggregator:
             result = agent.predict(features)
             agent_key = agent.name.lower().replace(" ", "_")
             all_results[agent_key] = result
+            
+            # Update max tracking
+            if result["risk_score"] > max_score:
+                max_score = result["risk_score"]
+                primary_threat = agent.name
 
         # Get adaptive weights from LearningEngine
         weights = self.learning_engine.get_weights()
