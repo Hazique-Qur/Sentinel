@@ -91,7 +91,7 @@ const ShelterMap = ({ shelters, center, risk, score, regionRisk }) => {
     };
 
     return (
-        <div className="h-[400px] w-full relative z-0">
+        <div className="h-full w-full relative z-0">
             <MapContainer center={center} zoom={12} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
                 <ChangeView center={center} />
                 <FlyToNearestShelter shelters={shelters} risk={risk} />

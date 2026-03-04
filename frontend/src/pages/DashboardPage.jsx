@@ -23,7 +23,7 @@ const DashboardPage = ({ appState, setAppState, fetchRiskData }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className={`min-h-screen pt-24 pb-12 transition-all duration-1000 ease-in-out ${riskLevel === 'High' ? 'bg-red-950/10' :
-                    riskLevel === 'Medium' ? 'bg-amber-950/10' : 'bg-slate-950'
+                riskLevel === 'Medium' ? 'bg-amber-950/10' : 'bg-slate-950'
                 } relative overflow-hidden`}
         >
             {/* Background Decorative Elements */}
@@ -105,7 +105,7 @@ const DashboardPage = ({ appState, setAppState, fetchRiskData }) => {
 
                     {/* Column 2: Visual Intelligence (Center/Right Map) */}
                     <div className="xl:col-span-8 space-y-6">
-                        <div className="glass p-2 border-white/5 h-[620px] relative">
+                        <div className="glass p-2 border-white/5 h-[620px] relative overflow-hidden">
                             <div className="absolute top-4 left-4 z-[100] flex gap-2">
                                 <div className="bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-2">
                                     <Globe size={12} className="text-blue-400" />
@@ -120,6 +120,7 @@ const DashboardPage = ({ appState, setAppState, fetchRiskData }) => {
                                 center={[appState.location.lat, appState.location.lon]}
                                 shelters={appState.shelters || []}
                                 riskLevel={riskLevel}
+                                score={appState.risk?.adjusted_score || 0}
                             />
                         </div>
                     </div>

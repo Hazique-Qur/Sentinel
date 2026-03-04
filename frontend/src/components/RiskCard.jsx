@@ -73,7 +73,7 @@ const RiskCard = ({ score, level, primaryThreat, confidence, alertTier, loading 
                     />
                 </svg>
                 <div className="absolute flex flex-col items-center">
-                    <span className="text-6xl font-['Outfit'] font-bold">{Math.round(score)}</span>
+                    <span className="text-5xl font-['Outfit'] font-bold">{Math.round(score)}</span>
                     <span className={`text-[10px] font-bold uppercase tracking-[0.3em] ${getLevelColor()}`}>
                         {alertTier?.label || level}
                     </span>
