@@ -273,9 +273,26 @@ class RiskAggregator:
         prediction_id = f"pred_{int(time.time())}_{str(lat).replace('.','')[:4]}"
         self.learning_engine.log_prediction(prediction_id, adjusted_score, component_contributions)
 
-        # 4-Tier alert classification
+        # Phase 9 Upgrade: Integrate RiskEngineV3 for stronger intelligence
+        from src.models.risk_engine_v3 import RiskEngineV3
+        engine_v3 = RiskEngineV3()
+        
+        # Map features for V3
+        v3_features = {
+            "rainfall_intensity": features.get("rain", 0),
+            "temp": features.get("temp", 20),
+            "wind_speed": features.get("wind_speed", 0),
+            "soil_moisture": 0.3 + (features.get("humidity", 50) / 200),
+            "slope": 5.0
+        }
+        
+        v3_result = engine_v3.analyze_vulnerability(v3_features, lat, lon)
+        
+        # 4-Tier alert classification (using v3 results)
+        adjusted_score = v3_result["score"]
         alert_tier = _get_alert_tier(adjusted_score)
         alert_level = alert_tier["level"]
+        threat_vectors = v3_result["threat_vectors"]
 
         # Legacy level string for backward compatibility
         overall_level = "Low"
@@ -311,6 +328,7 @@ class RiskAggregator:
             "adjusted_risk_score": adjusted_score,
             "overall_risk_level": overall_level,
             "alert_tier": alert_tier,
+            "threat_vectors": threat_vectors,
             "priority": priority,
             "primary_threat": primary_threat,
             "primary_driver": primary_driver,
