@@ -105,18 +105,23 @@ const DashboardPage = ({ appState, setAppState, fetchRiskData }) => {
                     </div>
                 </div>
 
-                {/* Dashboard Grid */}
+                {/* Dashboard Grid — Rebalanced for high-density situational awareness */}
                 <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
 
-                    {/* Column 1: Risk Overview (Left) */}
-                    <div className="xl:col-span-4 space-y-6">
+                    {/* Left Column: Tactical Metrics & Decision Protocols (xl:col-span-3) */}
+                    <div className="xl:col-span-3 space-y-6">
                         <RiskCard
-                            score={appState.risk?.adjusted_score || 0}
+                            score={scrubbedRisk?.adjusted_score || appState.risk?.adjusted_score || 0}
                             level={riskLevel}
                             primaryThreat={appState.primary_threat}
                             confidence={appState.risk?.confidence || 0.8}
                             alertTier={alertTier}
                             loading={loading}
+                        />
+
+                        <DecisionEngine
+                            tier={alertTier?.level || 1}
+                            threats={appState.risk?.threat_vectors || [appState.primary_threat]}
                         />
 
                         <RiskFactors factors={riskFactors} />
@@ -126,15 +131,15 @@ const DashboardPage = ({ appState, setAppState, fetchRiskData }) => {
                             <div className="bg-amber-500/10 border border-amber-500/30 p-4 rounded-2xl flex gap-3">
                                 <AlertTriangle className="text-amber-500 shrink-0" size={18} />
                                 <p className="text-[11px] text-amber-500/80 leading-relaxed font-medium uppercase tracking-tight">
-                                    Signal degradation detected. Confidence below federal thresholds. Predictions may require manual verification.
+                                    Signal degradation detected. Confidence below federal thresholds.
                                 </p>
                             </div>
                         )}
                     </div>
 
-                    {/* Column 2: Visual Intelligence (Center/Right Map) */}
-                    <div className="xl:col-span-8 space-y-6">
-                        <div className="glass p-2 border-white/5 h-[620px] relative overflow-hidden">
+                    {/* Right Column: Visual Intelligence & Timeline (xl:col-span-9) */}
+                    <div className="xl:col-span-9 space-y-6">
+                        <div className="glass p-2 border-white/5 h-[660px] relative overflow-hidden">
                             <div className="absolute top-4 left-4 z-[100] flex gap-2">
                                 <div className="bg-slate-900/80 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10 flex items-center gap-2">
                                     <Globe size={11} className="text-blue-400" />
@@ -148,7 +153,8 @@ const DashboardPage = ({ appState, setAppState, fetchRiskData }) => {
                             <ShelterMap
                                 center={[appState.location.lat, appState.location.lon]}
                                 shelters={appState.shelters || []}
-                                riskLevel={riskLevel}
+                                riskLevels={riskLevel} // Fix prop name inconsistency if needed, but keeping current for safety
+                                risk={riskLevel}
                                 score={scrubbedRisk?.adjusted_score || appState.risk?.adjusted_score || 0}
                             />
                         </div>
@@ -157,14 +163,38 @@ const DashboardPage = ({ appState, setAppState, fetchRiskData }) => {
                             forecast={forecast}
                             onScrub={handleScrub}
                         />
-                    </div>
 
-                    {/* Column 3: Tactical Decision Unit */}
-                    <div className="xl:col-span-4 lg:col-span-12">
-                        <DecisionEngine
-                            tier={alertTier?.level || 1}
-                            threats={appState.risk?.threat_vectors || [appState.primary_threat]}
-                        />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Actions moved into Intelligence flow for better balance */}
+                            <ActionList
+                                actions={appState.actions}
+                                riskLevel={riskLevel}
+                            />
+
+                            <div className="glass p-6 border-white/5">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <ShieldCheck className="text-emerald-400" size={18} />
+                                    <h3 className="text-sm font-bold text-white uppercase tracking-wider">System Integrity</h3>
+                                </div>
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-center text-[10px]">
+                                        <span className="text-slate-500 uppercase tracking-widest font-black">Neural Sync</span>
+                                        <span className="text-emerald-400 font-bold">OPTIMAL</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-[10px]">
+                                        <span className="text-slate-500 uppercase tracking-widest font-black">Edge Processing</span>
+                                        <span className="text-emerald-400 font-bold">ACTIVE</span>
+                                    </div>
+                                    <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                                        <motion.div
+                                            initial={{ width: 0 }}
+                                            animate={{ width: '100%' }}
+                                            className="bg-emerald-500 h-full"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </main>

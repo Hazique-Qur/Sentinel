@@ -101,17 +101,18 @@ const ShelterMap = ({ shelters, center, risk, score, regionRisk }) => {
 
     return (
         <div className="h-full w-full relative z-0">
-            {/* Spectral Layer Control */}
-            <div className="absolute top-4 right-4 z-[1000] flex flex-col gap-2">
+            {/* Spectral Tactical HUD — Horizontal Bottom-Center */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-2 bg-slate-950/40 backdrop-blur-md p-1.5 rounded-2xl border border-white/5 shadow-2xl">
                 {layers.map(layer => (
                     <button
                         key={layer.id}
                         onClick={() => setActiveLayer(layer.id)}
-                        className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-tighter transition-all border backdrop-blur-md shadow-xl ${activeLayer === layer.id
-                                ? 'bg-blue-600/40 border-blue-400 text-white'
-                                : 'bg-slate-900/60 border-white/10 text-slate-400 hover:text-white hover:bg-slate-800/80'
+                        className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 flex items-center gap-2 border ${activeLayer === layer.id
+                                ? 'bg-blue-600/40 border-blue-400/50 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)]'
+                                : 'bg-transparent border-transparent text-slate-500 hover:text-slate-300 hover:bg-white/5'
                             }`}
                     >
+                        <div className={`w-1 h-1 rounded-full transition-all ${activeLayer === layer.id ? 'bg-blue-400 scale-150' : 'bg-slate-700'}`} />
                         {layer.label}
                     </button>
                 ))}
